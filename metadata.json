@@ -1,0 +1,8 @@
+{
+  "name": "SUPM TEGAL Asesmen Mendalam",
+  "description": "Generator perangkat asesmen pembelajaran SMK SUPM Tegal (Diagnostik, Formatif, Sumatif) berbasis Taksonomi SOLO dan standar kemaritiman/perikanan dengan Gemini AI.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

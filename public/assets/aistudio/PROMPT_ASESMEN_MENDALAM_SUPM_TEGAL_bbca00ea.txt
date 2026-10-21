@@ -1,0 +1,110 @@
+ 
+BANGUN APLIKASI WEB PRODUKSI: SUPM TEGAL ASSESSMENT GENERATOR
+Jangan membuat aplikasi pembuat prompt. Bangun aplikasi web yang benar-benar memanggil Gemini API untuk menghasilkan perangkat asesmen secara langsung. Implementasikan kode, antarmuka, fungsi backend, validasi, dan fitur unduhan yang berfungsi. Jangan berhenti pada mockup, rencana, atau contoh statis.
+1. TUJUAN DAN PENGGUNA
+Aplikasi digunakan guru SUPM TEGAL untuk menghasilkan perangkat asesmen pembelajaran SMK: diagnostik, formatif, dan sumatif. Antarmuka menggunakan bahasa Indonesia yang jelas dan mudah dipahami guru.
+2. IDENTITAS DAN FORMULIR
+- Nama aplikasi: SUPM TEGAL ASSESMEN MENDALAM.
+- Nama sekolah: SUPM TEGAL, otomatis terisi dan tidak perlu diedit.
+- Nama guru: input teks kosong yang diisi pengguna.
+- Mata pelajaran: input teks kosong yang diisi pengguna.
+- Jenjang: SMK, tetap.
+- Kelas: dropdown X, XI, XII.
+- Jurusan: dropdown NKPI, TKPI, APPL, APHP.
+- Jenis asesmen: Diagnostik, Formatif, Sumatif.
+- Materi/topik: textarea.
+- Tujuan pembelajaran: textarea.
+- Capaian pembelajaran atau indikator tambahan: opsional.
+- Bentuk instrumen: Pilihan Ganda, Esai/Uraian, Praktik/Unjuk Kerja, Observasi, Campuran.
+- Jumlah soal/tugas: pilihan 5, 10, 15, 20, 25, 30, 40.
+- Tingkat kognitif: Taksonomi Solo dari Prastruktural, Unistruktural, Multistruktural, Relasional, Abstrak Diperluas
+- Instruksi tambahan: opsional.
+- Tombol utama: Generate Asesmen.
+Validasi input wajib sebelum memanggil API. Jangan meminta pengguna mengisi ulang data yang sudah tersedia.
+
+3. LOGIKA JENIS ASESMEN
+Diagnostik: mengidentifikasi pengetahuan awal, kesiapan, prasyarat, dan miskonsepsi; hasil membantu menentukan tindak lanjut pembelajaran.
+Formatif: memantau proses belajar, memberikan umpan balik spesifik, dan menyarankan perbaikan pembelajaran.
+Sumatif: mengukur ketercapaian tujuan pembelajaran dengan kisi-kisi, instrumen, kunci/pedoman jawaban, dan penskoran yang konsisten.
+Jangan memperlakukan ketiga jenis asesmen secara identik. Sesuaikan kisi-kisi, interpretasi, rubrik, dan tindak lanjut dengan jenis asesmen.
+4. OUTPUT WAJIB
+Setelah pengguna mengklik Generate Asesmen, panggil Gemini API dan tampilkan perangkat asesmen yang dihasilkan AI secara langsung di aplikasi. Sediakan empat bagian yang dapat dilihat melalui tab atau panel terpisah:
+A. KISI-KISI SOAL
+Tabel berisi nomor, tujuan/indikator, materi, indikator soal/tugas, level kognitif, bentuk instrumen, nomor butir, dan bobot/skor jika relevan. Seluruh butir harus terpetakan.
+B. NASKAH SOAL
+Naskah siap diperiksa dan dicetak untuk peserta didik. Jangan menampilkan kunci atau jawaban benar pada bagian ini.
+Jika bentuknya Pilihan Ganda, setiap butir WAJIB memiliki tepat lima opsi A, B, C, D, E. Gunakan satu jawaban paling tepat untuk pilihan ganda biasa. Pastikan opsi masuk akal, tidak ambigu, dan sesuai tujuan pembelajaran.
+Untuk esai, praktik, observasi, dan bentuk campuran, buat instruksi dan indikator tugas yang sesuai bentuknya.
+C. KUNCI JAWABAN TERPISAH
+Buat bagian tersendiri yang tidak tercampur dalam naskah peserta didik. Sertakan nomor soal, jawaban benar atau pedoman jawaban, serta pembahasan singkat bila diperlukan. Untuk praktik atau esai, sertakan unsur jawaban/kinerja yang diharapkan.
+D. RUBRIK DAN PEDOMAN PENSKORAN
+Sesuaikan dengan bentuk instrumen. Pilihan ganda menggunakan kunci dan aturan skor. Esai memakai kriteria dan deskripsi kualitas jawaban. Praktik menggunakan indikator kinerja yang dapat diamati dan tingkat pencapaian. Jelaskan skor maksimum, bobot, rumus nilai, dan interpretasi jika relevan. Jangan menggunakan rubrik seragam untuk semua bentuk.
+Sertakan pemeriksaan mutu: kecocokan jumlah butir, nomor, kisi-kisi, kunci, rubrik, ketepatan konsep, dan keselarasan dengan tujuan pembelajaran. Tandai bagian yang harus diverifikasi guru.
+5. INTEGRASI GEMINI API
+Gunakan SDK/API Gemini resmi yang kompatibel dengan lingkungan proyek dan dokumentasi terbaru. Periksa ketersediaan model sebelum memilihnya; jangan menggunakan nama model yang dikarang atau sudah tidak didukung.
+Pemanggilan Gemini harus dilakukan melalui backend/server-side, bukan langsung dari browser.
+Simpan kredensial di environment variable atau pengelola secret yang sesuai dengan hosting. Jangan menanam API key di source code frontend, file yang dipublikasikan, localStorage, atau pesan error.
+Sediakan konfigurasi model di satu tempat agar mudah diperbarui. Gunakan instruksi sistem yang konsisten dan struktur respons terstandar. Bila memakai JSON terstruktur, validasi JSON dan tangani respons tidak valid secara aman.
+6. KEAMANAN DAN PRIVASI
+Tidak perlu login, database, bank soal, atau penyimpanan riwayat permanen untuk MVP.
+Jangan menyimpan isi asesmen pada server lebih lama dari yang diperlukan untuk memproses permintaan. Jangan mengirim data pribadi yang tidak diperlukan ke layanan AI. Berikan pemberitahuan singkat bahwa materi dikirim ke Gemini untuk diproses.
+Jangan mengekspos stack trace, secret, atau kredensial kepada pengguna.
+7. PENANGANAN ERROR API
+Tangani API key tidak valid, autentikasi gagal, kuota habis, rate limit, server sibuk, timeout, jaringan terputus, model tidak tersedia, dan respons AI tidak lengkap.
+Tampilkan pesan bahasa Indonesia yang jelas beserta langkah berikutnya.
+Gunakan retry terbatas dengan exponential backoff untuk error sementara yang layak dicoba ulang. Jangan mengulang terus-menerus atau mengulang error konfigurasi permanen.
+Nonaktifkan tombol generate selama permintaan berlangsung, tampilkan indikator proses, dan cegah klik ganda.
+Jangan menghapus hasil sebelumnya ketika permintaan baru gagal.
+Jika hasil tidak lengkap, validasi bagian yang hilang dan tawarkan perbaikan terbatas tanpa mengulang seluruh proses jika memungkinkan.
+8. MODE MANUAL CADANGAN
+Jika Gemini API tidak tersedia, aplikasi tetap dapat menghasilkan prompt lengkap berdasarkan formulir yang telah diisi. Sediakan tombol Salin Prompt Cadangan dan Unduh Prompt (.txt), agar guru dapat menempelkannya ke Gemini atau ChatGPT secara manual.
+Jelaskan bahwa mode manual hanya menghasilkan prompt, bukan jawaban asesmen secara otomatis.
+Jangan berpura-pura bahwa AI berhasil menghasilkan soal jika panggilan API gagal.
+9. FITUR UNDUHAN WAJIB
+Sediakan unduhan Word (.docx) dan PDF untuk hasil asesmen.
+Pilihan unduhan:
+- Semua perangkat asesmen dalam satu paket.
+- Kisi-kisi saja.
+- Naskah soal saja.
+- Kunci jawaban saja.
+- Rubrik penilaian saja.
+Sediakan pula Unduh Prompt Cadangan (.txt).
+Naskah soal peserta didik dan kunci jawaban harus benar-benar terpisah dalam file terpisah. Pada paket gabungan, tempatkan kunci setelah naskah soal pada bagian tersendiri yang jelas dan tidak ikut tampil di halaman soal peserta didik.
+Dokumen harus memiliki judul, identitas sekolah, nama guru jika diisi, mata pelajaran, kelas, jurusan, jenis asesmen, tanggal pembuatan, penomoran halaman bila memungkinkan, tabel yang rapi, dan format bahasa Indonesia.
+Gunakan pustaka yang kompatibel untuk membuat DOCX dan PDF di sisi server. Jangan membuat tautan unduhan palsu. Pastikan file benar-benar dibuat dan dapat dibuka sebelum menyediakan tautan unduhan.
+Nama file harus jelas, misalnya SUPM_TEGAL_KisiKisi.docx, SUPM_TEGAL_NaskahSoal.pdf, SUPM_TEGAL_KunciJawaban.docx, dan SUPM_TEGAL_Rubrik.pdf.
+10. VALIDASI KONTEN
+- Jumlah butir harus sama dengan permintaan pengguna.
+- Pilihan ganda wajib memiliki opsi A–E pada setiap butir.
+- Kisi-kisi, soal, kunci, dan rubrik harus konsisten.
+- Jangan mengarang tujuan/capaian kurikulum yang tidak diberikan. Jika informasi tidak cukup, ajukan pertanyaan klarifikasi atau nyatakan asumsi.
+- Pastikan kunci jawaban benar secara konsep dan sesuai dengan opsi soal.
+- Guru harus dapat membaca dan memeriksa hasil sebelum mengunduh.
+- Sediakan tombol generate ulang atau perbaiki hasil tanpa menghapus hasil sebelumnya sebelum pengguna menyetujuinya.
+11. DESAIN UI
+Buat desain modern, profesional, responsif untuk desktop dan ponsel, dengan warna biru navy dan putih yang sesuai identitas SUPM TEGAL.
+Gunakan formulir yang ringkas dan terkelompok menjadi Identitas Guru, Rancangan Asesmen, dan Pengaturan Output.
+Tampilkan loading state, status proses, pesan error, tab hasil, tombol salin, dan tombol unduh yang jelas.
+Jangan menggunakan data contoh statis sebagai hasil produksi.
+
+12. IMPLEMENTASI DAN PENGUJIAN
+Periksa struktur proyek sebelum mengubahnya. Gunakan stack yang paling kompatibel dengan lingkungan Google AI Studio dan hosting yang tersedia. Jika backend belum tersedia, bangun backend yang sesuai dalam proyek yang sama; frontend dan backend tidak harus menjadi dua proyek terpisah.
+Jangan menambahkan database atau autentikasi yang tidak dibutuhkan.
+Implementasikan seluruh fungsi, bukan sekadar menampilkan tombol.
+Jalankan build/type checking dan perbaiki error yang ditemukan.
+Uji minimal:
+a. Generate berhasil untuk diagnostik, formatif, sumatif.
+b. Pilihan ganda dengan lima opsi A–E pada setiap butir.
+c. Esai dan praktik dengan rubrik yang sesuai.
+d. Jumlah butir konsisten.
+e. Unduhan DOCX dan PDF dapat dibuka.
+f. Kunci jawaban terpisah dari naskah soal.
+g. API key tidak muncul di frontend.
+h. Error API dan mode manual cadangan berfungsi.
+i. Hasil lama tetap ada saat generate berikutnya gagal.
+j. Tampilan responsif.
+13. HASIL AKHIR
+Bangun aplikasi web yang berfungsi dan dapat dijalankan. Tampilkan ringkasan file yang dibuat, langkah mengatur Gemini API key dengan aman, cara menjalankan aplikasi, cara menguji generate, dan langkah deployment online.
+Jika ada kemampuan yang tidak didukung oleh lingkungan, jelaskan secara eksplisit dan berikan alternatif yang benar-benar berfungsi. Jangan mengklaim fitur telah selesai jika belum diimplementasikan.
+
+Mulai dengan memeriksa lingkungan proyek, lalu implementasikan aplikasi secara bertahap sampai siap diuji.
